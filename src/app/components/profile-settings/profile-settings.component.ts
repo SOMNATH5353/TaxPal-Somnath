@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { CategoriesComponent } from '../categories/categories.component';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-profile-settings',
@@ -117,7 +118,7 @@ export class ProfileSettingsComponent implements OnInit {
     };
     
     // Make API call to update name
-    this.http.post('/api/users/update-profile', userData).subscribe({
+    this.http.post(`${environment.apiBaseUrl || '/api'}/users/update-profile`, userData).subscribe({
       next: (response: any) => {
         this.successMsg = 'Profile updated successfully!';
         
@@ -176,7 +177,7 @@ export class ProfileSettingsComponent implements OnInit {
     };
     
     // Make API call to update password
-    this.http.post('/api/users/update-password', passwordData).subscribe({
+    this.http.post(`${environment.apiBaseUrl || '/api'}/users/update-password`, passwordData).subscribe({
       next: (response: any) => {
         this.successMsg = 'Password updated successfully!';
         

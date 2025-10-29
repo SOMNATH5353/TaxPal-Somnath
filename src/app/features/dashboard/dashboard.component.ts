@@ -2,6 +2,7 @@ import { Component, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { DashboardService, DashboardSummary, Transaction, ExpenseBreakdown, BudgetProgress, TaxEstimation } from './dashboard.service';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   // UI state
   loading = false;
   error: string | null = null;
+
+  // API base (expose deployment backend URL for templates / child services)
+  apiBase = environment.apiBaseUrl || '/api';
 
   constructor(private dashboardService: DashboardService) {}
 

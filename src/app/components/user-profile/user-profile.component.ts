@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule } from '@angular/router';
 import { Chart } from 'chart.js/auto';
+import { environment } from '../../../environments/environment'; // added
 
 interface CategoryData {
   label: string;
@@ -85,6 +86,9 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private expenseChart: Chart | null = null;
   private chartInitialized: boolean = false;
+
+  // API base (deployed backend or fallback)
+  private apiBase = environment.apiBaseUrl || '/api';
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) {}
 
@@ -334,7 +338,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       date: this.incomeForm.date || new Date().toISOString().split('T')[0]
     };
 
-    this.http.post('/api/users/add-income', formData)
+    this.http.post(`${this.apiBase}/users/add-income`, formData)
       .subscribe({
         next: (response: any) => {
           // Add to local array immediately to avoid refetching
@@ -378,7 +382,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       date: this.expenseForm.date || new Date().toISOString().split('T')[0]
     };
 
-    this.http.post('/api/users/add-expense', formData)
+    this.http.post(`${this.apiBase}/users/add-expense`, formData)
       .subscribe({
         next: (response: any) => {
           // Add to local array immediately to avoid refetching
@@ -407,7 +411,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateRecentTransactions();
       return;
     }
-    this.http.get<any[]>(`/api/users/income-list?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.get<any[]>(`${this.apiBase}/users/income-list?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: (list) => {
         this.incomeList = Array.isArray(list)
           ? list.map(item => ({
@@ -433,7 +437,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateRecentTransactions();
       return;
     }
-    this.http.get<any[]>(`/api/users/expense-list?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.get<any[]>(`${this.apiBase}/users/expense-list?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: (list) => {
         this.expenseList = Array.isArray(list)
           ? list.map(item => ({
@@ -745,7 +749,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.http.delete(`/api/users/delete-income/${id}?userEmail=${encodeURIComponent(this.userEmail)}`)
+    this.http.delete(`${this.apiBase}/users/delete-income/${id}?userEmail=${encodeURIComponent(this.userEmail)}`)
       .subscribe({
         next: () => {
           // Update local array immediately
@@ -767,7 +771,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.http.delete(`/api/users/delete-expense/${id}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-expense/${id}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.expenseList = this.expenseList.filter(expense => expense._id !== id);
         this.calculateMonthlyTotals();
@@ -786,7 +790,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.http.delete(`/api/users/delete-all-income?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-all-income?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.incomeList = [];
         this.calculateMonthlyTotals();
@@ -804,7 +808,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.http.delete(`/api/users/delete-all-expenses?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-all-expenses?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.expenseList = [];
         this.calculateMonthlyTotals();

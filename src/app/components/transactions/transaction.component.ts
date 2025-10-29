@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
+import { environment } from '../../../environments/environment'; // added
 
 interface Transaction {
   _id?: string;
@@ -62,6 +63,9 @@ export class TransactionComponent implements OnInit, OnDestroy {
     try { document.body.style.overflow = ''; } catch (e) {}
   }
 
+  // API base (use deployed backend or fallback to /api)
+  private apiBase = environment.apiBaseUrl || '/api';
+
   fetchTransactions(): void {
     this.loading = true;
     this.error = '';
@@ -69,8 +73,8 @@ export class TransactionComponent implements OnInit, OnDestroy {
     const emailQuery = this.userEmail ? `?userEmail=${encodeURIComponent(this.userEmail)}` : '';
 
     Promise.all([
-      this.http.get<any[]>(`/api/users/income-list${emailQuery}`).toPromise(),
-      this.http.get<any[]>(`/api/users/expense-list${emailQuery}`).toPromise()
+      this.http.get<any[]>(`${this.apiBase}/users/income-list${emailQuery}`).toPromise(),
+      this.http.get<any[]>(`${this.apiBase}/users/expense-list${emailQuery}`).toPromise()
     ]).then(([incomes = [], expenses = []]) => {
       // Populate incomeList & expenseList for the tables
       this.incomeList = (incomes || []).map(i => ({ ...i, date: i.date ? new Date(i.date) : null }));
@@ -158,7 +162,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
       date: this.incomeForm.date || new Date().toISOString().split('T')[0]
     };
 
-    this.http.post('/api/users/add-income', formData).subscribe({
+    this.http.post(`${this.apiBase}/users/add-income`, formData).subscribe({
       next: (response: any) => {
         if (response && response.income) {
           // add to incomeList and recentTransactions
@@ -198,7 +202,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
       date: this.expenseForm.date || new Date().toISOString().split('T')[0]
     };
 
-    this.http.post('/api/users/add-expense', formData).subscribe({
+    this.http.post(`${this.apiBase}/users/add-expense`, formData).subscribe({
       next: (response: any) => {
         if (response && response.expense) {
           this.expenseList.unshift(response.expense);
@@ -241,8 +245,8 @@ export class TransactionComponent implements OnInit, OnDestroy {
     }
     if (!confirm('Delete this transaction?')) return;
     const endpoint = tx.type === 'income'
-      ? `/api/users/delete-income/${tx._id}?userEmail=${encodeURIComponent(this.userEmail)}`
-      : `/api/users/delete-expense/${tx._id}?userEmail=${encodeURIComponent(this.userEmail)}`;
+      ? `${this.apiBase}/users/delete-income/${tx._id}?userEmail=${encodeURIComponent(this.userEmail)}`
+      : `${this.apiBase}/users/delete-expense/${tx._id}?userEmail=${encodeURIComponent(this.userEmail)}`;
     this.http.delete(endpoint).subscribe({
       next: () => {
         this.recentTransactions = this.recentTransactions.filter(t => t._id !== tx._id);
@@ -259,7 +263,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
       return;
     }
     if (!confirm('Are you sure you want to delete this income record?')) return;
-    this.http.delete(`/api/users/delete-income/${id}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-income/${id}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.incomeList = this.incomeList.filter(income => income._id !== id);
         this.updateRecentTransactions();
@@ -276,7 +280,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
       return;
     }
     if (!confirm('Are you sure you want to delete this expense record?')) return;
-    this.http.delete(`/api/users/delete-expense/${id}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-expense/${id}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.expenseList = this.expenseList.filter(exp => exp._id !== id);
         this.updateRecentTransactions();
@@ -290,7 +294,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
 
   deleteAllIncome() {
     if (!confirm('Are you sure you want to delete ALL income records? This cannot be undone.')) return;
-    this.http.delete(`/api/users/delete-all-income?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-all-income?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.incomeList = [];
         this.updateRecentTransactions();
@@ -304,7 +308,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
 
   deleteAllExpenses() {
     if (!confirm('Are you sure you want to delete ALL expense records? This cannot be undone.')) return;
-    this.http.delete(`/api/users/delete-all-expenses?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+    this.http.delete(`${this.apiBase}/users/delete-all-expenses?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
       next: () => {
         this.expenseList = [];
         this.updateRecentTransactions();

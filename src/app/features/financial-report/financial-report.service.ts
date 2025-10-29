@@ -8,7 +8,8 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class FinancialReportService {
-  private apiUrl = '/api/financialReports';
+  // Use deployed backend URL (fallback to '/api' when not provided)
+  private apiUrl = `${environment.apiBaseUrl || '/api'}/financialReports`;
 
   constructor(private http: HttpClient) {}
 
@@ -45,11 +46,11 @@ export class FinancialReportService {
 
   // Add method to fetch report data
   getReportData(userEmail: string, year: number): Observable<any> {
-    return this.http.get(`/api/reports/data/${encodeURIComponent(userEmail)}/${year}`);
+    return this.http.get(`${environment.apiBaseUrl || '/api'}/reports/data/${encodeURIComponent(userEmail)}/${year}`);
   }
 
   generateReport(data: any): Observable<Blob> {
-    return this.http.post('/api/reports/generate-report', data, {
+    return this.http.post(`${environment.apiBaseUrl || '/api'}/reports/generate-report`, data, {
       responseType: 'blob',
       headers: {
         'Content-Type': 'application/json'

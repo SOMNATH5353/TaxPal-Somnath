@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; // added import
 
 @Component({
     selector: 'app-budget',
@@ -62,7 +63,7 @@ export class BudgetComponent implements OnInit {
         const formValue = this.form.value;
         
         // Send to the correct backend API endpoint with all fields including userEmail
-        this.http.post('/api/users/add-simple-budget', { 
+        this.http.post(`${environment.apiUrl}/api/users/add-simple-budget`, { 
             userEmail: this.userEmail,
             amount: formValue.amount,
             category: formValue.category,
@@ -102,7 +103,7 @@ export class BudgetComponent implements OnInit {
         
         this.loading = true;
         // Get budgets for the current user only
-        this.http.get(`/api/users/simple-budget-list?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+        this.http.get(`${environment.apiUrl}/api/users/simple-budget-list?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
             next: (data: any) => {
                 this.budgets = data || [];
                 this.loading = false;
@@ -137,7 +138,7 @@ export class BudgetComponent implements OnInit {
         this.loading = true;
         this.error = '';
         // Use the correct API endpoint and pass userEmail for security
-        this.http.delete(`/api/users/delete-budget/${budgetId}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
+        this.http.delete(`${environment.apiUrl}/api/users/delete-budget/${budgetId}?userEmail=${encodeURIComponent(this.userEmail)}`).subscribe({
             next: () => {
                 // Remove from local budgets array
                 this.budgets = this.budgets.filter(b => b._id !== budgetId);

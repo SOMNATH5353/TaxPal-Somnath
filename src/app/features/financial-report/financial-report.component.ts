@@ -7,6 +7,7 @@ import { DarkModeService } from '../../core/services/dark-mode.service';
 import { Subscription } from 'rxjs';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { environment } from '../../../environments/environment'; // added
 
 interface MonthlyReport {
   name: string;
@@ -83,6 +84,9 @@ export class FinancialReportComponent implements OnInit, OnDestroy {
   userEmail: string = '';
   userInitial: string = '';
   showProfileMenu: boolean = false;
+
+  // API base URL (deployed backend)
+  private apiBase = environment.apiBaseUrl || '/api';
 
   constructor(private financialReportService: FinancialReportService, private http: HttpClient, private darkModeService: DarkModeService) {}
 
@@ -221,50 +225,49 @@ export class FinancialReportComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Fetch fresh data from backend
-    this.financialReportService.getReportData(userEmail, this.selectedYear)
-      .subscribe({
-        next: (data) => {
-          // Update local data with fresh data from backend
-          this.monthlyReports = data.reports || [];
-          this.quarterlyReports = this.calculateQuarterlyReports(this.monthlyReports);
-          this.reports = this.showQuarterly ? this.quarterlyReports : this.monthlyReports;
-          this.yearSummary = data.yearSummary || this.yearSummary;
+    // Request preview data from backend preview endpoint
+    const previewBody = {
+      reportType: 'financial_report',
+      userEmail,
+      year: this.selectedYear
+    };
+    
+    this.http.post<any>(`${this.apiBase}/reports/preview-report`, previewBody).subscribe({
+      next: (data) => {
+        this.monthlyReports = data.reports || [];
+        this.quarterlyReports = this.calculateQuarterlyReports(this.monthlyReports);
+        this.reports = this.showQuarterly ? this.quarterlyReports : this.monthlyReports;
+        this.yearSummary = data.yearSummary || this.yearSummary;
 
-          // Prepare preview data
-          const reportData = {
-            monthlyReports: this.monthlyReports,
-            quarterlyReports: this.quarterlyReports,
-            yearSummary: this.yearSummary,
-            yearlyReport: this.yearlyReport,
-            selectedYear: this.selectedYear,
-            format: format
-          };
+        const reportData = {
+          monthlyReports: this.monthlyReports,
+          quarterlyReports: this.quarterlyReports,
+          yearSummary: this.yearSummary,
+          yearlyReport: this.yearlyReport,
+          selectedYear: this.selectedYear,
+          format
+        };
 
-          // Show preview
-          this.previewData = reportData;
-          this.showPreview = true;
-          this.isGeneratingPreview = false;
-        },
-        error: (error) => {
-          console.error('Error fetching report data:', error);
-          alert('Failed to fetch report data. Using cached data.');
-          
-          // Fallback to cached data
-          const reportData = {
-            monthlyReports: this.monthlyReports,
-            quarterlyReports: this.quarterlyReports,
-            yearSummary: this.yearSummary,
-            yearlyReport: this.yearlyReport,
-            selectedYear: this.selectedYear,
-            format: format
-          };
-
-          this.previewData = reportData;
-          this.showPreview = true;
-          this.isGeneratingPreview = false;
-        }
-      });
+        this.previewData = reportData;
+        this.showPreview = true;
+        this.isGeneratingPreview = false;
+      },
+      error: (error) => {
+        console.error('Error fetching report data:', error);
+        alert('Failed to fetch report data. Using cached data.');
+        const reportData = {
+          monthlyReports: this.monthlyReports,
+          quarterlyReports: this.quarterlyReports,
+          yearSummary: this.yearSummary,
+          yearlyReport: this.yearlyReport,
+          selectedYear: this.selectedYear,
+          format
+        };
+        this.previewData = reportData;
+        this.showPreview = true;
+        this.isGeneratingPreview = false;
+      }
+    });
   }
 
   // Replace downloadReport for PDF with client-side jsPDF
@@ -293,14 +296,15 @@ export class FinancialReportComponent implements OnInit, OnDestroy {
 
     console.log('Downloading report with data:', reportData);
 
-    this.financialReportService.generateReport(reportData)
+    // Call backend generate endpoint to produce the file blob
+    this.http.post(`${this.apiBase}/reports/generate-report`, reportData, { responseType: 'blob' })
       .subscribe({
         next: (blob: Blob) => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          const reportName = this.selectedReportType === 'income' ? 'income-statement' : 
-                            this.selectedReportType === 'expense' ? 'expense-report' : 
+          const reportName = this.selectedReportType === 'income' ? 'income-statement' :
+                            this.selectedReportType === 'expense' ? 'expense-report' :
                             'financial-report';
           a.download = `${reportName}-${this.selectedYear}.${this.previewFormat}`;
           document.body.appendChild(a);

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
+import { environment } from '../environments/environment'; // added
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,8 @@ export class AppComponent implements OnInit, OnDestroy {
   @HostBinding('class.dark-theme') isDarkMode = false;
   
   private darkModeListener: any;
+  // expose api base URL for templates / runtime use
+  apiBase = environment.apiBaseUrl || '/api';
 
   ngOnInit() {
     // Check initial dark mode setting from localStorage
@@ -28,16 +31,16 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     
     // Listen for dark mode changes
-    this.darkModeListener = window.addEventListener('darkModeChanged', (event: any) => {
+    this.darkModeListener = (event: any) => {
       this.isDarkMode = event.detail?.isDarkMode || false;
-      
       // Update body class
       if (this.isDarkMode) {
         document.body.classList.add('dark-theme');
       } else {
         document.body.classList.remove('dark-theme');
       }
-    });
+    };
+    window.addEventListener('darkModeChanged', this.darkModeListener);
   }
 
   ngOnDestroy() {

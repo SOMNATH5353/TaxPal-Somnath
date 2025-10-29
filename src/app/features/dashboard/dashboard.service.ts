@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment'; // added
 
 export interface DashboardSummary {
   totalIncome: number;
@@ -44,7 +45,9 @@ export interface TaxEstimation {
   providedIn: 'root'
 })
 export class DashboardService {
-  private readonly API_URL = 'http://localhost:5000/api/dashboard';
+  // Use deployed backend URL from environment; fall back to local '/api' when not set
+  private readonly API_URL = `${environment.apiBaseUrl || '/api'}/dashboard`;
+
   private readonly headers: HttpHeaders;
 
   private loadingSubject = new BehaviorSubject<boolean>(false);

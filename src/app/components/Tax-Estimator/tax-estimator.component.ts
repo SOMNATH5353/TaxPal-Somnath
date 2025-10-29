@@ -57,7 +57,7 @@ export class TaxEstimatorComponent {
   errorMessage = '';
   successMessage = '';
   
-  private apiUrl = environment.apiUrl || '/api';
+  private apiUrl = environment.apiBaseUrl || '/api';
   
   // User data
   userId = '';

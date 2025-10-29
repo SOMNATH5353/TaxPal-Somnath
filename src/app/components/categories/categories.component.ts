@@ -28,7 +28,7 @@ export class CategoriesComponent implements OnInit {
   incomeCategories: Category[] = [];
   expenseCategories: Category[] = [];
   
-  // API base URL
+  // API base URL — use apiUrl from environment with '/api' fallback
   private apiUrl = environment.apiUrl || '/api';
   
   // Loading and message states

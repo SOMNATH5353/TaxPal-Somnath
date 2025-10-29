@@ -30,7 +30,7 @@ export class TaxCalendarComponent implements OnInit, OnDestroy {
   taxEvents: TaxEvent[] = []; // will be filled from backend
   eventsLoading = false;
   eventsError = '';
-  private apiUrl = environment.apiUrl || '/api';
+  private apiUrl = environment.apiBaseUrl || '/api';
   private taxEstimateSavedListener: any;
 
   constructor(private router: Router, private http: HttpClient) {

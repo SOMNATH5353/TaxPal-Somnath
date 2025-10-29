@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-sign-in-form',
@@ -104,7 +105,7 @@ export class SignInFormComponent implements OnInit, OnDestroy {
     this.successMsg = '';
 
     try {
-      const res: any = await this.http.post('/api/users/signin', {
+      const res: any = await this.http.post(`${environment.apiBaseUrl || '/api'}/users/signin`, {
         email: this.email,
         password: this.password
       }).toPromise();

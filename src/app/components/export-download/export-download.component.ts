@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { REPORT_TYPES, REPORT_FORMATS, REPORT_PERIODS } from '../../constants/report-options.constants';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-export-download',
@@ -52,7 +53,7 @@ export class ExportDownloadComponent {
       year: currentYear
     };
 
-    this.http.post('/api/reports/preview-report', body)
+    this.http.post(`${environment.apiBaseUrl || '/api'}/reports/preview-report`, body)
       .subscribe({
         next: (response: any) => {
           this.previewLoading = false;
@@ -92,7 +93,7 @@ export class ExportDownloadComponent {
       year: this.previewData.year
     };
 
-    this.http.post('/api/reports/generate-report', body, { responseType: 'blob' })
+    this.http.post(`${environment.apiBaseUrl || '/api'}/reports/generate-report`, body, { responseType: 'blob' })
       .subscribe({
         next: (res: Blob) => {
           this.loading = false;

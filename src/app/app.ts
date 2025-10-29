@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfileNavbarComponent } from './components/navbar/profile-navbar.component';
+import { environment } from '../environments/environment'; // added
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,8 @@ import { ProfileNavbarComponent } from './components/navbar/profile-navbar.compo
 export class App implements OnInit {
   private isProfilePage: boolean = false;
   title = 'TaxPal';
+  // expose api base URL for templates / runtime use
+  apiBase = environment.apiBaseUrl || '/api';
   
   constructor(private router: Router) {}
   

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { SignInFormComponent } from '../signin/sign-in-form.component';
 import { SignUpFormComponent } from '../signup/sign-up-form.component';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +20,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   showProfileMenu = false;
   isMobileMenuOpen = false;
   isLoggedIn = false;
+
+  // API base for potential template usage/debugging
+  apiBase = environment.apiBaseUrl || '/api';
 
   constructor(
     private router: Router,

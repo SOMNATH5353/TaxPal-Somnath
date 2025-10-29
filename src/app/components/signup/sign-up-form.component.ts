@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-sign-up-form',
@@ -129,7 +130,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     };
 
     try {
-      const res: any = await this.http.post('/api/users/register', payload).toPromise();
+      const res: any = await this.http.post(`${environment.apiBaseUrl || '/api'}/users/register`, payload).toPromise();
       this.successMsg = 'Account created! Redirecting...';
       setTimeout(() => {
         this.closeForm();

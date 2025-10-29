@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; // added
 
 @Component({
   selector: 'app-sign-in-form',
@@ -536,7 +537,7 @@ export class SignInFormComponent implements OnInit, OnDestroy {
       'Content-Type': 'application/json'
     });
 
-    this.http.post('http://localhost:5000/api/user/login', { email: this.email, password: this.password }, { headers })
+    this.http.post(`${environment.apiBaseUrl || 'https://taxpal-backend.onrender.com'}/api/user/login`, { email: this.email, password: this.password }, { headers })
       .subscribe({
         next: (res: any) => {
           console.log('Login successful:', res);
