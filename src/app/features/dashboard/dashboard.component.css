@@ -1,0 +1,323 @@
+:root{
+  --bg-dark: #0f172a;
+  --card-dark: #1e293b;
+  --card-darker: #0b1726;
+  --text-light: #e5eef6;
+  --muted: #9aa8b8;
+  --primary-green: #22c55e;
+  --primary-red: #ef4444;
+  --primary-orange: #f59e0b;
+  --primary-blue: #3b82f6;
+  --graph-income: #60a5fa;
+  --graph-expense: #475569;
+  --pie-blue: #3b82f6;
+  --pie-light-blue: #60a5fa;
+  --pie-teal: #14b8a6;
+  --pie-green: #34d399;
+  --glass: rgba(255,255,255,0.02);
+}
+
+body.light-mode{
+  --bg-dark: #f8fafc;
+  --card-dark: #ffffff;
+  --card-darker: #eef2f6;
+  --text-light: #0f172a;
+  --muted: #475569;
+  --glass: rgba(0,0,0,0.02);
+}
+
+*{box-sizing:border-box}
+:host {
+  display: block;
+}
+:host ::ng-deep body {
+  margin:0;
+  font-family: Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg-dark);
+  color:var(--text-light);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+header.topbar{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:14px 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.brand{
+  display:flex;align-items:center;gap:10px;font-weight:700;color:var(--muted)
+}
+.brand .logo-icon{
+  width:36px;height:36px;border-radius:8px;background:linear-gradient(180deg,#1f2937,#0f172a);display:flex;align-items:center;justify-content:center;color:var(--primary-blue);font-weight:800
+}
+nav.main-nav{display:flex;gap:18px;margin-left:18px}
+nav.main-nav a{color:var(--muted);text-decoration:none;font-weight:600}
+nav.main-nav a.active{color:var(--primary-blue)}
+
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+.btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+.btn.add-income{background:linear-gradient(180deg,#35c66e,#22c55e);color:#fff}
+.btn.add-expense{background:linear-gradient(180deg,#ff6b6b,#ef4444);color:#fff}
+.icon-wrap{display:flex;align-items:center;gap:10px}
+.icon-circle{width:36px;height:36px;border-radius:999px;background:var(--card-dark);display:flex;align-items:center;justify-content:center;color:var(--muted);position:relative}
+.icon-circle .badge{position:absolute;top:-6px;right:-6px;background:#ef4444;color:white;font-size:11px;padding:2px 6px;border-radius:999px}
+
+/* Page title area */
+.page-hero{display:flex;align-items:flex-start;justify-content:space-between;padding:26px 22px}
+.page-left{max-width:730px}
+.page-left h1{margin:0;font-size:36px;color:var(--text-light);letter-spacing:-0.6px}
+.page-left p{margin:8px 0 0;color:var(--muted)}
+
+/* Main grid */
+.grid{
+  display:grid;
+  gap:20px;
+  padding:0 22px 40px 22px;
+  grid-template-columns: repeat(12,1fr);
+  align-items:start;
+}
+
+/* General grid layout */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* KPI cards row (4 cards full width) */
+.kpi-card{background:var(--card-dark);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.kpi-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.kpi-card h3{margin:0;color:var(--muted);font-size:13px}
+.kpi-card h2{margin:8px 0 0;font-size:22px}
+.kpi-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+.kpi-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0.5rem 0;
+}
+.kpi-card p {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+.kpi-card .card-head{display:flex;justify-content:space-between;align-items:center}
+.kpi-card .card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.kpi-square{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white}
+.kpi-square {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #ffffff;
+}
+.kpi-green{background:var(--primary-green)}
+.kpi-red{background:var(--primary-red)}
+.kpi-orange{background:var(--primary-orange)}
+.kpi-blue{background:var(--primary-blue)}
+
+/* grid placements */
+.col-span-3{grid-column: span 3}
+.col-span-6{grid-column: span 6}
+.col-span-12{grid-column: span 12}
+
+/* Balance card */
+.balance-card{display:flex;gap:16px;align-items:center}
+.balance-card {
+  display: flex;
+  align-items: center;
+}
+.balance-left{flex:1}
+.circle-wrap{width:140px;height:140px;position:relative}
+.circle-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+.circle-wrap svg{transform:rotate(-90deg)}
+.circle-wrap .ring-bg {
+  fill: none;
+  stroke: #e5e7eb;
+  stroke-width: 10;
+}
+.circle-wrap .ring-fill {
+  fill: none;
+  stroke: #3b82f6;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+.ring-bg{stroke:rgba(255,255,255,0.06)}
+.ring-fill{stroke:var(--graph-income)}
+.balance-text{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;color:var(--text-light)}
+
+/* Transactions */
+.transactions-list{list-style:none;padding:0;margin:0}
+.transactions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.transaction-item{display:flex;justify-content:space-between;padding:14px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);margin-bottom:12px}
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #f9fafb;
+  margin-bottom: 0.5rem;
+}
+.tx-left{display:flex;gap:12px;align-items:center}
+.tx-meta{display:flex;flex-direction:column}
+.tx-meta small{color:var(--muted)}
+
+/* Budget & Pie */
+.budget .label{display:flex;justify-content:space-between}
+.progress-track{height:10px;background:rgba(255,255,255,0.04);border-radius:999px;margin-top:6px;overflow:hidden}
+.progress-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill{height:100%;background:var(--graph-income)}
+.progress-fill {
+  background: #3b82f6;
+  height: 100%;
+}
+.pie-wrap{text-align:center}
+
+/* Income vs Expenses wide card */
+.wide-card{grid-column:1 / -1;background:var(--card-dark);padding:18px;border-radius:12px}
+.wide-card {
+  grid-column: span 12;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* floating action plus */
+.fab{position:fixed;right:22px;bottom:22px;width:54px;height:54px;border-radius:999px;background:var(--card-dark);display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,0.02);cursor:pointer}
+.fab {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.fab:hover {
+  background: #2563eb;
+}
+
+/* small helpers */
+.muted{color:var(--muted)}
+.green{color:var(--primary-green)}
+.red{color:var(--primary-red)}
+
+/* Responsive tweaks */
+@media (max-width:1000px){
+  .col-span-3{grid-column: span 6}
+  .col-span-6{grid-column: span 12}
+}
+@media (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+  }
+
+  .kpi-card {
+    grid-column: span 6;
+  }
+
+  .wide-card {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .kpi-card {
+    grid-column: span 4;
+  }
+
+  .wide-card {
+    grid-column: span 4;
+  }
+
+  .transactions-list {
+    padding: 0 0.5rem;
+  }
+
+  .fab {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .kpi-card {
+    grid-column: span 2;
+  }
+
+  .wide-card {
+    grid-column: span 2;
+  }
+
+  .transactions-list {
+    padding: 0;
+  }
+
+  .fab {
+    width: 40px;
+    height: 40px;
+  }
+}

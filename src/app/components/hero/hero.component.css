@@ -1,0 +1,185 @@
+.hero-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 4rem);
+  padding: clamp(2rem, 6vw, 6rem) 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Dark mode for hero section */
+.hero-section.dark-mode,
+:host-context(body.dark-mode) .hero-section,
+:host-context(body.dark) .hero-section {
+  background-color: #111827;
+}
+
+:host-context(body.dark-mode) h1,
+:host-context(body.dark) h1,
+.hero-section.dark-mode h1 {
+  color: #f9fafb;
+}
+
+:host-context(body.dark-mode) p,
+:host-context(body.dark) p,
+.hero-section.dark-mode p {
+  color: #d1d5db;
+}
+
+:host-context(body.dark-mode) .demo-btn,
+:host-context(body.dark) .demo-btn,
+.hero-section.dark-mode .demo-btn {
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+:host-context(body.dark-mode) .demo-btn:hover,
+:host-context(body.dark) .demo-btn:hover,
+.hero-section.dark-mode .demo-btn:hover {
+  background-color: #374151;
+  border-color: #6b7280;
+}
+
+:host-context(body.dark-mode) .image-placeholder,
+:host-context(body.dark) .image-placeholder,
+.hero-section.dark-mode .image-placeholder {
+  background-color: #1f2937;
+  color: #9ca3af;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(1.75rem, 6vw, 3rem) 1rem;
+  }
+
+  .hero-content,
+  .hero-image {
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .cta-buttons {
+    justify-content: center;
+  }
+
+  .get-started-btn,
+  .demo-btn {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .image-placeholder {
+    height: clamp(160px, 30vw, 320px);
+  }
+}
+
+/* Very small phones: tighten spacing and stack button content vertically */
+@media (max-width: 420px) {
+  .hero-section {
+    gap: 1rem;
+    padding: 1.25rem 0.75rem;
+  }
+
+  .hero-section h1 {
+    font-size: clamp(1.25rem, 7vw, 1.8rem);
+    text-align: center;
+  }
+
+  .hero-section p {
+    text-align: center;
+  }
+
+  .get-started-btn,
+  .demo-btn {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .image-placeholder {
+    height: 160px;
+    max-width: 100%;
+  }
+}
+
+/* Large screens: extra breathing room */
+@media (min-width: 1400px) {
+  .hero-section {
+    gap: 6rem;
+    padding: 8rem 0;
+  }
+  .hero-section h1 {
+    font-size: clamp(2.8rem, 1.2vw + 2.2rem, 4rem);
+  }
+  .image-placeholder {
+    max-width: 720px;
+    height: clamp(300px, 28vw, 520px);
+  }
+}
+
+/* Accessibility: focus styles for CTA buttons */
+.get-started-btn:focus,
+.demo-btn:focus {
+  outline: 3px solid rgba(59, 130, 246, 0.16);
+  outline-offset: 3px;
+}
+
+/* Ensure hero-images and placeholders scale without overflow */
+.hero-section,
+.hero-content,
+.hero-image,
+.image-placeholder {
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Fluid typography */
+.hero-section h1 {
+  font-size: clamp(1.6rem, 4.2vw, 3.5rem);
+  line-height: 1.05;
+  margin-bottom: clamp(0.75rem, 1.6vw, 1.5rem);
+}
+
+.hero-section p {
+  font-size: clamp(0.95rem, 1.5vw, 1.125rem);
+  margin-bottom: clamp(0.75rem, 1.8vw, 2rem);
+}
+
+/* CTA buttons wrapping and sizing */
+.cta-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ensure buttons are touch-friendly and consistent */
+.get-started-btn,
+.demo-btn {
+  min-width: 140px;
+  padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.9rem, 1.4vw, 1.5rem);
+  box-sizing: border-box;
+}
+
+/* image area: responsive sizing and centering */
+.hero-image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.image-placeholder {
+  width: 100%;
+  max-width: 560px;
+  height: clamp(200px, 35vw, 420px);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}

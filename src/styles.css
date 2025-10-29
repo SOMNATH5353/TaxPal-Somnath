@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* You can add global styles to this file, and also import other style files */
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f9fafb;
+  color: #1f2937;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  touch-action: manipulation;
+  overflow-x: hidden;
+}
+
+/* Fix for mobile interactions */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Dark Mode */
+html.dark, body.dark-mode, body.dark-theme {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+/* Fix for page content colors */
+.dark .content-container, .dark-theme .content-container {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+/* Ensure the content takes up the full height */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  flex: 1;
+}
+
+/* Common utility classes */
+.text-primary {
+  color: #3b82f6;
+}
+
+.dark .text-primary, .dark-theme .text-primary {
+  color: #60a5fa;
+}
+
+.bg-primary {
+  background-color: #3b82f6;
+}
+
+.dark .bg-primary, .dark-theme .bg-primary {
+  background-color: #60a5fa;
+}
+
+/* Fix for the mobile menu z-index */
+.navbar {
+  z-index: 1000;
+}
+
+.mobile-dropdown {
+  z-index: 999;
+}
+
+.mobile-menu-backdrop {
+  z-index: 998;
+}
+
+/* Fix for components to properly handle dark mode */
+.dark .text-dark, .dark-theme .text-dark {
+  color: #f9fafb !important;
+}
+
+.dark .bg-light, .dark-theme .bg-light {
+  background-color: #1f2937 !important;
+}
+
+.dark .border-light, .dark-theme .border-light {
+  border-color: #374151 !important;
+}
+
+/* Dark mode global styles */
+.dark-mode {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6 {
+  color: var(--text-primary);
+}
+
+.dark-mode p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .card, .dark-mode .box, .dark-mode .container {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+.dark-mode input, .dark-mode textarea, .dark-mode select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark-mode input::placeholder, .dark-mode textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Modal related styles */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.dark button:focus-visible,
+.dark a:focus-visible,
+.dark input:focus-visible {
+  outline-color: #60a5fa;
+}
+
+/* Improve mobile navigation experience */
+a, button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mobile-nav-link {
+  cursor: pointer !important;
+  user-select: none;
+}
+
+/* Ensure mobile links work properly */
+@media (max-width: 768px) {
+  a[routerLink], 
+  .mobile-nav-link {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
