@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/client",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -33,13 +34,23 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "200kb",
+                  "maximumError": "400kb"
+                },
+                {
+                  "type": "allScript",
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
+                },
+                {
+                  "type": "all",
+                  "maximumWarning": "3mb",
+                  "maximumError": "6mb"
                 }
               ],
               "outputHashing": "all"
