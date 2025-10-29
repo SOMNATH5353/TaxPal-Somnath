@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  // Use deployment backend URL instead of localhost
-  apiBaseUrl: 'https://taxpal-backend.onrender.com',
+  // Ensure backend base includes '/api' so code using `${environment.apiBaseUrl}/...` hits the correct routes
+  apiBaseUrl: 'https://taxpal-backend.onrender.com/api',
   // Keep legacy alias for compatibility
-  apiUrl: 'https://taxpal-backend.onrender.com'
+  apiUrl: 'https://taxpal-backend.onrender.com/api'
 };
