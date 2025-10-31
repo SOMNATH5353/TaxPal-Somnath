@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from '../../../environments/environment'; // added
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -24,6 +24,9 @@ export class SignInFormComponent implements OnInit, OnDestroy {
   loading = false;
   errorMsg = '';
   successMsg = '';
+
+  // controller used to cancel/timeout fetch sign-in request
+  private signInAbortController: AbortController | null = null;
   
   floatingEmojis: { symbol: string, style: any }[] = [];
   private emojis = ['💰', '💵', '💸', '💲', '💹', '💳'];
@@ -95,7 +98,7 @@ export class SignInFormComponent implements OnInit, OnDestroy {
   async signIn() {
     if (!this.email || !this.password || this.loading) return;
     
-    // Clear any existing auth data
+    // Clear existing auth data
     localStorage.removeItem('user_email');
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_id');
@@ -104,42 +107,80 @@ export class SignInFormComponent implements OnInit, OnDestroy {
     this.errorMsg = '';
     this.successMsg = '';
 
+    // Abort previous controller if any
+    if (this.signInAbortController) {
+      try { this.signInAbortController.abort(); } catch {}
+    }
+    this.signInAbortController = new AbortController();
+    const signal = this.signInAbortController.signal;
+
+    // Short timeout (8s) — will abort the fetch if backend is slow
+    const timeoutMs = 8000;
+    const timeoutId = setTimeout(() => {
+      try { this.signInAbortController?.abort(); } catch {}
+    }, timeoutMs);
+
+    const url = `${environment.apiBaseUrl || '/api'}/users/signin`;
+    
     try {
-      const res: any = await this.http.post(`${environment.apiBaseUrl || '/api'}/users/signin`, {
-        email: this.email,
-        password: this.password
-      }).toPromise();
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: this.email, password: this.password }),
+        signal
+      });
       
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        // Map common HTTP errors
+        if (response.status === 401) {
+          this.errorMsg = 'Incorrect password';
+        } else if (response.status === 404) {
+          this.errorMsg = 'No account found with that email';
+        } else {
+          const text = await response.text().catch(() => '');
+          this.errorMsg = text || `Sign in failed (${response.status})`;
+        }
+        return;
+      }
+      
+      const res = await response.json().catch(() => null);
       this.successMsg = 'Signed in!';
       
-      // Store user info in localStorage or a service
       if (res?.user) {
         localStorage.setItem('user_email', res.user.email);
         localStorage.setItem('user_name', res.user.name || '');
         localStorage.setItem('user_id', res.user._id || '');
-        
-        // Create a custom event to notify other components about the user login
-        const loginEvent = new CustomEvent('userLoggedIn', { 
-          detail: { email: res.user.email, name: res.user.name } 
-        });
-        window.dispatchEvent(loginEvent);
+        window.dispatchEvent(new CustomEvent('userLoggedIn', { detail: { email: res.user.email, name: res.user.name } }));
+      } else if (res?.token) {
+        // Some backends return token + user separately
+        localStorage.setItem('jwt', res.token);
       }
       
-      // Immediate navigation without delay
       this.closeForm();
       this.router.navigate(['/user-profile']);
     } catch (err: any) {
-      console.error('Sign in error:', err);
-      // Show more specific error messages
-      if (err.status === 401) {
-        this.errorMsg = 'Incorrect password';
-      } else if (err.status === 404) {
-        this.errorMsg = 'No account found with that email';
+      clearTimeout(timeoutId);
+      if (err?.name === 'AbortError') {
+        this.errorMsg = 'Sign in request was cancelled or timed out. Please try again.';
       } else {
-        this.errorMsg = err?.error?.error || 'Failed to sign in. Please try again.';
+        console.error('Sign in error:', err);
+        this.errorMsg = err?.message || 'Failed to sign in. Please try again.';
       }
     } finally {
       this.loading = false;
+      this.signInAbortController = null;
+    }
+  }
+  
+  // Allow UI to cancel a pending sign-in (bind to a cancel button if desired)
+  cancelSignIn() {
+    if (this.signInAbortController) {
+      try { this.signInAbortController.abort(); } catch {}
+      this.signInAbortController = null;
+      this.loading = false;
+      this.errorMsg = 'Sign in cancelled';
     }
   }
   
